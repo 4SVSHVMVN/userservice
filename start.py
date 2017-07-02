@@ -1,9 +1,9 @@
 #!/bin/python
 # -*- coding: utf-8
- 
+
 import MySQLdb
 import sys
-login=str(raw_input("Login: "))
+login = str(raw_input("Login: "))
 password=str(raw_input("Password: "))
 
 def dbinit(host="localhost", user="root", passwd="root", db="userservice"):
