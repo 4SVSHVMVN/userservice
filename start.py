@@ -28,8 +28,16 @@ def adduser(db, newlogin, newpassword):
         db.rollback()
 
 
-def deluser():
-    sql = """delete from  userservice.user where name='test2';"""
+def deluser(db, dellogin):
+    sql = """delete from  userservice.user where name=%s;"""
+    try:
+        db.begin()
+        db.cursor().execute(sql, (dellogin))
+        db.commit()
+        print("Пользователь " + dellogin + " удален")
+    except MySQLdb.Error as e:
+        print "MySQL Error [%d]: %s" % (e.args[0], e.args[1])
+        db.rollback()
 
 
 login = str(raw_input("Login: "))
@@ -72,6 +80,5 @@ if command == "deluser":
     dellogin = str(raw_input("login: "))
     accept = str(raw_input("Точно удалить " + dellogin + " y/N "))
     if accept == "y" or accept == "Y" or accept == "yes" or accept == "Yes" or accept == "YES":
-        print "user deleted"
+        deluser(db, dellogin)
 db.close()
-
