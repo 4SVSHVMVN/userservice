@@ -4,7 +4,7 @@
 import MySQLdb
 import sys
 login = str(raw_input("Login: "))
-password=str(raw_input("Password: "))
+password = str(raw_input("Password: "))
 
 def dbinit(host="localhost", user="root", passwd="root", db="userservice"):
 	db = MySQLdb.connect(host, user, passwd,db, charset='utf8')
@@ -78,4 +78,5 @@ if command=="deluser":
 	accept=str(raw_input("Точно удалить "+dellogin+" y/N "))
 	if accept=="y" or accept=="Y" or accept=="yes" or accept=="Yes" or accept=="YES":
 		print "user deleted"
+		
 db.close()
