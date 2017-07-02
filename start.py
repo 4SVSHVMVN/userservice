@@ -32,7 +32,7 @@ def deluser(db, dellogin):
     sql = """delete from  userservice.user where name=%s;"""
     try:
         db.begin()
-        db.cursor().execute(sql, (dellogin))
+        db.cursor().execute(sql, (dellogin,))
         db.commit()
         print("Пользователь " + dellogin + " удален")
     except MySQLdb.Error as e:
@@ -66,19 +66,22 @@ if grant is True:
 else:
     print "Доступ запрещен"
     sys.exit(1)
-command = str(raw_input(">>> "))
-command = command.strip()
-if command == "list":
-    list(cursor)
-if command == "useradd":
-    newlogin = str(raw_input("Login: "))
-    newlogin = newlogin.strip()
-    newpassword = str(raw_input("Password: "))
-    newpassword = newpassword.strip()
-    adduser(db, newlogin, newpassword)
-if command == "deluser":
-    dellogin = str(raw_input("login: "))
-    accept = str(raw_input("Точно удалить " + dellogin + " y/N "))
-    if accept == "y" or accept == "Y" or accept == "yes" or accept == "Yes" or accept == "YES":
-        deluser(db, dellogin)
+while True:    
+	command = str(raw_input(">>> "))
+	command = command.strip()
+	if command == "list":
+	    list(cursor)
+	if command == "useradd":
+	    newlogin = str(raw_input("Login: "))
+	    newlogin = newlogin.strip()
+	    newpassword = str(raw_input("Password: "))
+	    newpassword = newpassword.strip()
+	    adduser(db, newlogin, newpassword)
+	if command == "deluser":
+	    dellogin = str(raw_input("login: "))
+	    accept = str(raw_input("Точно удалить " + dellogin + " y/N "))
+	    if accept == "y" or accept == "Y" or accept == "yes" or accept == "Yes" or accept == "YES":
+	        deluser(db, dellogin)
+	if command == "quit":
+	    sys.exit(0)
 db.close()
