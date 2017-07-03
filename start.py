@@ -40,6 +40,13 @@ def deluser(db, dellogin):
         db.rollback()
 
 
+def help():
+    print "Список команд: "
+    print "    'list' - список участников"
+    print "    'adduser' - Добавить нового участника"
+    print "    'deluser' - Удалить участника"
+
+
 login = str(raw_input("Login: "))
 password = str(raw_input("Password: "))
 db = dbinit()
@@ -91,4 +98,9 @@ while True:
             print "Пользователь не найден"
     if command == "quit":
         sys.exit(0)
+    if command == "help":
+        help()
+    else:
+        help()
+
 db.close()
