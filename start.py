@@ -3,6 +3,7 @@
 
 import MySQLdb
 import sys
+import getpass
 
 
 def dbinit(host="localhost", user="root", passwd="root", db="userservice"):
@@ -43,12 +44,19 @@ def deluser(db, dellogin):
 def help():
     print "Список команд: "
     print "    'list' - список участников"
-    print "    'adduser' - Добавить нового участника"
+    print "    'useradd' - Добавить нового участника"
     print "    'deluser' - Удалить участника"
 
 
+def admin(db, login):
+    sql = """SELECT isadmin FROM userservice.user where name =%s;"""
+    cursor = db.cursor()
+    cursor.execute(sql, (login, ))
+    raw = cursor.fetchone()
+    return raw[0]
+
 login = str(raw_input("Login: "))
-password = str(raw_input("Password: "))
+password = getpass.getpass()
 db = dbinit()
 cursor = db.cursor()
 
@@ -79,10 +87,17 @@ while True:
     if command == "list":
         list(cursor)
     elif command == "useradd":
-        newlogin = str(raw_input("Login: "))
+        newlogin = str(raw_input("Имя пользователя: "))
         newlogin = newlogin.strip()
-        newpassword = str(raw_input("Password: "))
-        newpassword = newpassword.strip()
+        while True:
+            newpassword = getpass.getpass("Новый пароль: ")
+            newpassword = newpassword.strip()
+            newpassword2 = getpass.getpass("Повторите пароль: ")
+            newpassword2 = newpassword2.strip()
+            if newpassword == newpassword2:
+                break
+            else:
+                print "Пароли не совпадают. Повторите ввод "
         adduser(db, newlogin, newpassword)
     elif command == "deluser":
         dellogin = str(raw_input("login: "))
@@ -100,6 +115,8 @@ while True:
         sys.exit(0)
     elif command == "help":
         help()
+    elif command == "admin":
+        print admin(db, login)
     else:
         help()
 db.close()
