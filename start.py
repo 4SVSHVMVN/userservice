@@ -66,22 +66,29 @@ if grant is True:
 else:
     print "Доступ запрещен"
     sys.exit(1)
-while True:    
-	command = str(raw_input(">>> "))
-	command = command.strip()
-	if command == "list":
-	    list(cursor)
-	if command == "useradd":
-	    newlogin = str(raw_input("Login: "))
-	    newlogin = newlogin.strip()
-	    newpassword = str(raw_input("Password: "))
-	    newpassword = newpassword.strip()
-	    adduser(db, newlogin, newpassword)
-	if command == "deluser":
-	    dellogin = str(raw_input("login: "))
-	    accept = str(raw_input("Точно удалить " + dellogin + " y/N "))
-	    if accept == "y" or accept == "Y" or accept == "yes" or accept == "Yes" or accept == "YES":
-	        deluser(db, dellogin)
-	if command == "quit":
-	    sys.exit(0)
+while True:
+    command = str(raw_input(">>> "))
+    command = command.strip()
+    if command == "list":
+        list(cursor)
+    if command == "useradd":
+        newlogin = str(raw_input("Login: "))
+        newlogin = newlogin.strip()
+        newpassword = str(raw_input("Password: "))
+        newpassword = newpassword.strip()
+        adduser(db, newlogin, newpassword)
+    if command == "deluser":
+        dellogin = str(raw_input("login: "))
+        sql = """SELECT COUNT(name) FROM userservice.user WHERE name=%s"""
+        cursor.execute(sql, (dellogin.strip(), ))
+        row = cursor.fetchone()
+        name = row[0]
+        if row[0]:
+            accept = str(raw_input("Точно удалить " + dellogin + " y/N "))
+            if accept == "y" or accept == "Y" or accept == "yes" or accept == "Yes" or accept == "YES":
+                deluser(db, dellogin)
+        else:
+            print "Пользователь не найден"
+    if command == "quit":
+        sys.exit(0)
 db.close()
