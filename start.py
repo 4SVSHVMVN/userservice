@@ -78,13 +78,13 @@ while True:
     command = command.strip()
     if command == "list":
         list(cursor)
-    if command == "useradd":
+    elif command == "useradd":
         newlogin = str(raw_input("Login: "))
         newlogin = newlogin.strip()
         newpassword = str(raw_input("Password: "))
         newpassword = newpassword.strip()
         adduser(db, newlogin, newpassword)
-    if command == "deluser":
+    elif command == "deluser":
         dellogin = str(raw_input("login: "))
         sql = """SELECT COUNT(name) FROM userservice.user WHERE name=%s"""
         cursor.execute(sql, (dellogin.strip(), ))
@@ -92,15 +92,14 @@ while True:
         name = row[0]
         if row[0]:
             accept = str(raw_input("Точно удалить " + dellogin + " y/N "))
-            if accept == "y" or accept == "Y" or accept == "yes" or accept == "Yes" or accept == "YES":
+            if accept == "y" or accept == "Y" or accept == "yes" or accept == "Yes" or accept == "YES" or accept == "да" or accept == "Да" or accept == "ДА":            
                 deluser(db, dellogin)
         else:
             print "Пользователь не найден"
-    if command == "quit":
+    elif command == "quit":
         sys.exit(0)
-    if command == "help":
+    elif command == "help":
         help()
     else:
         help()
-
 db.close()
