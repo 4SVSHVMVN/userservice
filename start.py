@@ -41,11 +41,21 @@ def deluser(db, dellogin):
         db.rollback()
 
 
-def help():
+def helpadmin():
     print "Список команд: "
     print "    'list' - список участников"
     print "    'useradd' - Добавить нового участника"
     print "    'deluser' - Удалить участника"
+    print "    'status' - проверка статусаю"
+    print "    'sudo' - поднять пользователя до администратора"
+    print "    'quit' - выход из программы"
+
+
+def help():
+    print "Список команд: "
+    print "    'list' - список участников"
+    print "    'status' - проверка статуса"
+    print "    'quit' - выход из программы"
 
 
 def isadmin(db, login):
@@ -119,9 +129,9 @@ while True:
                     print "Пароли не совпадают. Повторите ввод "
             adduser(db, newlogin, newpassword)
         else:
-        	print "Недостаточно прав!"
+            print "Недостаточно прав!"
     elif command == "deluser":
-    	if isadmin(db, login):
+        if isadmin(db, login):
             dellogin = str(raw_input("login: "))
             if checkuser(db, dellogin):
                 accept = str(raw_input("Точно удалить " + dellogin + " y/N "))
@@ -134,9 +144,15 @@ while True:
     elif command == "quit":
         sys.exit(0)
     elif command == "help":
-        help()
-    elif command == "admin":
-        print isadmin(db, login)
+        if isadmin(db, login):
+            helpadmin()
+        else:
+            help()
+    elif command == "status":
+        if isadmin(db, login):
+            print "Администратор"
+        else:
+            print "Пользователь"
     elif command == "sudo":
         if isadmin(db, login):
             newadmin = str(raw_input("Введите имя пользователя: "))
@@ -148,5 +164,8 @@ while True:
         else:
             print "Недостаточно прав!"
     else:
-        help()
+        if isadmin(db, login):
+            helpadmin()
+        else:
+            help()
 db.close()
